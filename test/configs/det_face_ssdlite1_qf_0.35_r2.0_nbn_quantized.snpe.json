@@ -1,0 +1,184 @@
+{
+    "preprocess":{
+        "debug": false,
+        "ops":[
+            {"type":"resize",    "param":{"width":320, "height":320, "mode":"bilinear"}},
+            {"type":"totensor",  "param":{"hwc2chw": false, "swapchannel":true, "dtype":"int8"}}
+        ]
+    },
+    "inference": {
+        "debug": false,
+        "engine_param":{
+            "thread_num": 1,
+            "gpu_id": 0,
+            "int8": 1,
+            "core_type": 1,
+            "quantization_zero": 127,
+            "quantization_step": 0.007873999886214733,
+            "output_tensor":"mbox_conf_flatten, mbox_loc"
+        },
+        "engine": "liborion_snpe.so",
+        "model":  "face_ssdlite1_qf_0.35_r2.0_nbn_quantized.dlc",
+        "inputs":  [{"name":"data",          "shape":[1, 320, 320, 3]}],
+        "outputs": [
+            {"name":"mbox_conf_flatten", "shape":[1, 1, 1756, 2]},
+            {"name":"mbox_loc",          "shape":[1, 1, 1756, 4]}
+        ]
+    },
+    "postprocess":{
+        "debug": false,
+        "ops":[
+            {
+                "type":"det_ssd_detectionout_post",
+                "param":{
+                    "conf_thresh": 0.005,
+                    "label_map":{"face":1, "body":2},
+                    "image_info": {
+                        "image_width": 320,
+                        "image_height": 320
+                    },
+                    "prior_box": [
+                        {
+                            "min_size": [
+                                32.0
+                            ],
+                            "max_size": [],
+                            "aspect_ratio": [
+                                2.0
+                            ],
+                            "flip": true,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 0.0,
+                            "offset": 0.5,
+                            "layer_size": 20
+                        },
+                        {
+                            "min_size": [
+                                86.4000015258789
+                            ],
+                            "max_size": [
+                                140.8000030517578
+                            ],
+                            "aspect_ratio": [
+                                2.0
+                            ],
+                            "flip": true,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 0.0,
+                            "offset": 0.5,
+                            "layer_size": 10
+                        },
+                        {
+                            "min_size": [
+                                140.8000030517578
+                            ],
+                            "max_size": [
+                                195.1999969482422
+                            ],
+                            "aspect_ratio": [
+                                2.0
+                            ],
+                            "flip": true,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 0.0,
+                            "offset": 0.5,
+                            "layer_size": 5
+                        },
+                        {
+                            "min_size": [
+                                195.1999969482422
+                            ],
+                            "max_size": [
+                                249.60000610351563
+                            ],
+                            "aspect_ratio": [
+                                2.0
+                            ],
+                            "flip": true,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 0.0,
+                            "offset": 0.5,
+                            "layer_size": 3
+                        },
+                        {
+                            "min_size": [
+                                249.60000610351563
+                            ],
+                            "max_size": [
+                                304.0
+                            ],
+                            "aspect_ratio": [
+                                2.0
+                            ],
+                            "flip": true,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 0.0,
+                            "offset": 0.5,
+                            "layer_size": 2
+                        },
+                        {
+                            "min_size": [
+                                304.0
+                            ],
+                            "max_size": [
+                                320.0
+                            ],
+                            "aspect_ratio": [
+                                2.0
+                            ],
+                            "flip": true,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 0.0,
+                            "offset": 0.5,
+                            "layer_size": 1
+                        }
+                    ],
+                    "detection_out": {
+                        "class_count": 2,
+                        "background_label_id": 0,
+                        "conf_threshold": 0.005,
+                        "nms_threshold": 0.6,
+                        "top_k": 100,
+                        "bbox_code_type": "CENTER_SIZE"
+                    }                    
+                }
+            }
+        ]
+    }
+}

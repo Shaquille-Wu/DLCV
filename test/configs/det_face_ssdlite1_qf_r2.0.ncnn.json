@@ -1,0 +1,34 @@
+{
+      "preprocess":{
+          "debug": true,
+          "ops":[
+              {"type":"convert_data_type", "param":{"dtype": "float32"}},
+              {"type":"resize",    "param":{"width":320, "height":320, "mode":"bilinear"}},
+              {"type":"normalize", "param":{"mean": 127.5, "std": [127.5]}},
+              {"type":"totensor",  "param":{"hwc2chw": true, "swapchannel":true, "dtype":"float32"}}
+          ]
+      },
+      "inference": {
+          "debug": true,
+          "engine_param":{
+	      "thread_num": 1,
+	      "gpu_id": 0
+          },
+          "engine": "libncnn.so",
+          "model":  "ncnn/face_detect",
+          "inputs":  [{"name":"data",          "shape":[1, 3, 320, 320]}],
+          "outputs": [{"name":"detection_out", "shape":[1, 1, 100, 6]}]
+      },
+      "postprocess":{
+          "debug": true,
+          "ops":[
+              {
+	          "type":"det_ssd_post", 
+                  "param":{
+                       "conf_thresh": 0.005,
+                       "label_map":{"face":1, "body":2}
+                  }
+              }
+          ]
+      }
+}

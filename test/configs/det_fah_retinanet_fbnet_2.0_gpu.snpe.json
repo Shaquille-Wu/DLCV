@@ -1,0 +1,171 @@
+{
+    "preprocess":{
+        "debug": false,
+        "ops":[
+            {"type":"convert_data_type", "param":{"dtype": "float32"}},
+            {"type":"resize",    "param":{"width":320, "height":320, "mode":"bilinear"}},
+            {"type":"normalize", "param":{"mean": [102.9801, 115.9465, 122.7717], "std": [1.0, 1.0, 1.0]}},
+            {"type":"totensor",  "param":{"hwc2chw": false, "swapchannel":false, "dtype":"float32"}}
+        ]
+    },
+    "inference": {
+        "debug": false,
+        "engine_param":{
+            "thread_num": 1,
+            "gpu_id": 0,
+            "int8": 0,
+            "core_type": 2,
+            "quantization_zero": 114,
+            "quantization_step": 1.0776139497756958,
+            "output_tensor":"neck/conf_sigmoid, neck/loc_concat"
+        },
+        "engine": "liborion_snpe.so",
+        "model":  "fah_retinanet_fbnet_2.0.dlc",
+        "inputs":  [{"name":"data",          "shape":[1, 320, 320, 3]}],
+        "outputs": [
+            {"name":"neck/conf_sigmoid", "shape":[1, 1, 12804, 1]},
+            {"name":"neck/loc_concat",   "shape":[1, 1, 12804, 4]}
+        ]
+    },
+    "postprocess":{
+        "debug": false,
+        "ops":[
+            {
+                "type":"det_ssd_detectionout_post",
+                "param":{
+                    "conf_thresh": 0.005,
+                    "label_map":{"face":0},
+                    "image_info": {
+                        "image_width": 320,
+                        "image_height": 320
+                    },
+                    "prior_box": [
+                        {
+                            "min_size": [
+                                16.0,
+                                20.158737182617188,
+                                25.39841651916504
+                            ],
+                            "max_size": [],
+                            "aspect_ratio": [
+                                1.0,
+                                0.5
+                            ],
+                            "flip": false,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 8.0,
+                            "offset": 0.5,
+                            "layer_size": 40
+                        },
+                        {
+                            "min_size": [
+                                32.0,
+                                40.317474365234375,
+                                50.79683303833008
+                            ],
+                            "max_size": [],
+                            "aspect_ratio": [
+                                1.0,
+                                0.5
+                            ],
+                            "flip": false,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 16.0,
+                            "offset": 0.5,
+                            "layer_size": 20
+                        },
+                        {
+                            "min_size": [
+                                64.0,
+                                80.63494873046875,
+                                101.59366607666016
+                            ],
+                            "max_size": [],
+                            "aspect_ratio": [
+                                1.0,
+                                0.5
+                            ],
+                            "flip": false,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 32.0,
+                            "offset": 0.5,
+                            "layer_size": 10
+                        },
+                        {
+                            "min_size": [
+                                128.0,
+                                161.2698974609375,
+                                203.1873321533203
+                            ],
+                            "max_size": [],
+                            "aspect_ratio": [
+                                1.0,
+                                0.5
+                            ],
+                            "flip": false,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 64.0,
+                            "offset": 0.5,
+                            "layer_size": 5
+                        },
+                        {
+                            "min_size": [
+                                256.0,
+                                322.539794921875,
+                                406.3746643066406
+                            ],
+                            "max_size": [],
+                            "aspect_ratio": [
+                                1.0,
+                                0.5
+                            ],
+                            "flip": false,
+                            "clip": false,
+                            "variance": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.20000000298023224
+                            ],
+                            "step_size": 128.0,
+                            "offset": 0.5,
+                            "layer_size": 3
+                        }
+                    ],
+                    "detection_out": {
+                        "class_count": 1,
+                        "background_label_id": -2,
+                        "conf_threshold": 0.05000000074505806,
+                        "nms_threshold": 0.4000000059604645,
+                        "top_k": 100,
+                        "bbox_code_type": "CENTER_SIZE"
+                    }
+                }
+            }
+        ]
+    }
+}

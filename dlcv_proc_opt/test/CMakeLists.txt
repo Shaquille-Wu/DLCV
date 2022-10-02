@@ -1,0 +1,4 @@
+add_executable(test_normalize_image test_normalize_image.c test_com_def.c)
+target_link_libraries(test_normalize_image PRIVATE dlcv_proc_opt)
+
+add_test(NAME test_normalize_image COMMAND test_normalize_image WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

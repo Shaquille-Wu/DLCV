@@ -1,0 +1,125 @@
+{
+    "preprocess": {
+        "debug": true,
+        "ops": [
+            {
+                "type": "convert_data_type",
+                "param": {
+                    "dtype": "float32"
+                }
+            },
+            {
+                "type": "resize",
+                "param": {
+                    "width": 640,
+                    "height": 480,
+                    "mode": "bilinear"
+                }
+            },
+            {
+                "type": "totensor",
+                "param": {
+                    "hwc2chw": true,
+                    "swapchannel": true,
+                    "dtype": "float32"
+                }
+            }
+        ]
+    },
+    "inference": {
+        "debug": true,
+        "engine_param": {
+            "thread_num": 1,
+            "gpu_id": 0
+        },
+        "engine": "libdlcv_openvino.so",
+        "model": "bisenet.xml",
+        "inputs": [
+            {
+                "name": "input",
+                "shape": [
+                    1,
+                    3,
+                    480,
+                    640
+                ]
+            }
+        ],
+        "outputs": [
+            {
+                "name": "4681.1",
+                "shape": [
+                    1,
+                    1,
+                    120,
+                    160
+                ]
+            }
+        ]
+    },
+    "postprocess": {
+        "debug": true,
+        "ops": [
+            {
+                "type": "featuremap_post",
+                "param": {
+                    "mode": "recolor",
+                    "input": "4681.1",
+                    "colormap": [
+                        [
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            128,
+                            128
+                        ],
+                        [
+                            0,
+                            0,
+                            128
+                        ],
+                        [
+                            0,
+                            128,
+                            0
+                        ],
+                        [
+                            128,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            64
+                        ],
+                        [
+                            0,
+                            0,
+                            192
+                        ],
+                        [
+                            128,
+                            128,
+                            128
+                        ],
+                        [
+                            128,
+                            128,
+                            0
+                        ],
+                        [
+                            128,
+                            0,
+                            128
+                        ]
+                    ],
+                    "output_shape": [1, 120, 160, 3]
+                }
+            }
+        ]
+    }
+}
